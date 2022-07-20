@@ -29,6 +29,8 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  justify-content: space-between;
+  padding: 0.5rem;
 `
 
 export default DateTimeWidget

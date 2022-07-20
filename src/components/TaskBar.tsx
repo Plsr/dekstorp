@@ -2,19 +2,43 @@ import { FC } from 'react'
 import styled from 'styled-components'
 
 import DateTimeWidget from './DateTimeWidget'
+import ActiveTaskBarApp from './ActiveTaskBarApp'
 
-const TaskBar: FC<any> = () => {
+const TaskBar: FC<TaksBarProps> = ({ activeApps }) => {
   return (
     <TaskBarWrapper>
-      <div>Start</div>
-      <div>ActiveApps</div>
+      <StartButton><span>Start</span></StartButton>
+      <ActiveAppsWrapper>
+        <StyledActiveTaksBarApp name="test" />
+      </ActiveAppsWrapper>
       <StyledDateTimeWidget />
     </TaskBarWrapper>
   )
 }
 
+const StyledActiveTaksBarApp = styled(ActiveTaskBarApp)`
+  flex-basis: 150px;
+`
+
+const StartButton = styled.div`
+  padding: 0rem 1rem;
+  display: flex;
+  align-items: center;
+  background-color: #6daa84;
+  cursor: pointer;
+`
+
+const ActiveAppsWrapper = styled.div`
+  flex-grow: 1;
+  display: flex;
+  background-color: #d5e5db;
+  color: #333;
+`
+
 const StyledDateTimeWidget = styled(DateTimeWidget)`
   flex-shrink: 0;
+  font-size: 0.8rem;
+  background-color: #1c2620;
 `
 
 const TaskBarWrapper = styled.div`
@@ -26,8 +50,12 @@ const TaskBarWrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 5px 10px;
   color: white;
 `
+
+interface TaksBarProps {
+  activeApps?: string[]
+}
+
 
 export default TaskBar
