@@ -12,7 +12,7 @@ const TaskBar: FC<TaksBarProps> = ({ activeApps }) => {
     <TaskBarWrapper>
       <StartButton><span>Start</span></StartButton>
       <ActiveAppsWrapper>
-        { apps?.map(app =>  <StyledActiveTaksBarApp name={app.name} />)}
+        { apps?.map(app =>  <StyledActiveTaksBarApp key={app.id} name={app.name} />)}
       </ActiveAppsWrapper>
       <StyledDateTimeWidget />
     </TaskBarWrapper>

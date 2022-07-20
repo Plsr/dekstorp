@@ -1,13 +1,17 @@
 import styled from 'styled-components'
 import Desktop from './components/Desktop'
 import { AppsProvider } from './context/AppsContext';
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 
 function App() {
   return (
     <AppsProvider>
-      <Wrapper>
-        <Desktop />
-      </Wrapper>
+      <DndProvider backend={HTML5Backend} >
+        <Wrapper>
+          <Desktop />
+        </Wrapper>
+      </DndProvider>
     </AppsProvider>
   );
 }

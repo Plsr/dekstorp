@@ -1,20 +1,15 @@
-import { FC, useContext } from 'react'
-
-import { AppsContext } from '../context/AppsContext'
+import { FC } from 'react'
 
 import DesktopApps from './DesktopApps'
 import TaskBar from './TaskBar'
-import AppWindow from './AppWindow'
+import DragContainer from './DragContainer'
 
 const Desktop: FC<any> = () => {
-  const { apps } = useContext(AppsContext)
-
   return (
     <div>
-      <DesktopApps />
-      { apps.map(app => (
-        <AppWindow name={app.name} dimensions={app.dimensions} />
-      ))}
+      <DragContainer>
+        <DesktopApps />
+      </DragContainer>
       <TaskBar />
     </div>
   )

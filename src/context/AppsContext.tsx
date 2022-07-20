@@ -28,5 +28,8 @@ interface Props {
 export interface App {
   name: string
   dimensions: { width: number, height: number }
-  minimized: boolean
+  minimized: boolean,
+  left: number,
+  top: number,
+  id: string
 }

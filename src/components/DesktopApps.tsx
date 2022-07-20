@@ -9,7 +9,17 @@ const DesktopApps: FC<any> = () => {
   const handleDoubleClick = (appName: string) => {
     if(apps.map(app => app.name).includes(appName)) return
 
-    setApps([...apps, { name: appName, dimensions: { width: 200, height: 200 }, minimized: false} ])
+    setApps([
+      ...apps,
+      {
+        name: appName,
+        dimensions: { width: 200, height: 200 },
+        minimized: false,
+        top: 0,
+        left: 0,
+        id: 'asf'
+      }
+    ])
   }
 
   return (
