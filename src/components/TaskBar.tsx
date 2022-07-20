@@ -1,15 +1,18 @@
-import { FC } from 'react'
+import { FC, useContext } from 'react'
 import styled from 'styled-components'
 
+import { AppsContext } from '../context/AppsContext'
 import DateTimeWidget from './DateTimeWidget'
 import ActiveTaskBarApp from './ActiveTaskBarApp'
 
 const TaskBar: FC<TaksBarProps> = ({ activeApps }) => {
+  const { apps } = useContext(AppsContext)
+
   return (
     <TaskBarWrapper>
       <StartButton><span>Start</span></StartButton>
       <ActiveAppsWrapper>
-        <StyledActiveTaksBarApp name="test" />
+        { apps?.map(app =>  <StyledActiveTaksBarApp name={app.name} />)}
       </ActiveAppsWrapper>
       <StyledDateTimeWidget />
     </TaskBarWrapper>

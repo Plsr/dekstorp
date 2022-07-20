@@ -1,11 +1,14 @@
 import styled from 'styled-components'
-import Desktop from './components/Desktop';
+import Desktop from './components/Desktop'
+import { AppsProvider } from './context/AppsContext';
 
 function App() {
   return (
-    <Wrapper>
-      <Desktop />
-    </Wrapper>
+    <AppsProvider>
+      <Wrapper>
+        <Desktop />
+      </Wrapper>
+    </AppsProvider>
   );
 }
 
