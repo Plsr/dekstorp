@@ -3,9 +3,10 @@ import styled from 'styled-components'
 import { useDrag } from 'react-dnd'
 import { MdMinimize, MdClose } from "react-icons/md";
 
-import { AppsContext } from '../context/AppsContext'
+import { App, AppsContext } from '../context/AppsContext'
 
-const AppWindow: FC<AppWindowProps> = ({ name, dimensions, id, left, top }) => {
+const AppWindow: FC<AppWindowProps> = ({ app }) => {
+  const { id, left, top, name, dimensions, component } = app
   const { apps, setApps } = useContext(AppsContext)
 
   const [{ isDragging }, drag] = useDrag(
@@ -50,7 +51,7 @@ const AppWindow: FC<AppWindowProps> = ({ name, dimensions, id, left, top }) => {
         draggable
         onDragStart={disableDrag}
       >
-        { name }
+       {component(null)}
       </Content>
     </Window>
   )
@@ -86,11 +87,7 @@ const Window = styled.div<{ width: number, height: number, left: number, top: nu
 `
 
 interface AppWindowProps {
-  name: string,
-  dimensions: { width: number, height: number },
-  id: string,
-  left: number,
-  top: number
+  app: App
 }
 
 export default AppWindow

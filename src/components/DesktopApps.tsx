@@ -1,30 +1,24 @@
 import { FC, useContext } from 'react'
 
-import { AppsContext } from '../context/AppsContext'
+import { AppsContext, App } from '../context/AppsContext'
+import { availableApps } from '../util/appDirectory'
 import DesktopApp from './DesktopApp'
 
 const DesktopApps: FC<any> = () => {
   const { apps, setApps } = useContext(AppsContext)
 
-  const handleDoubleClick = (appName: string) => {
-    if(apps.map(app => app.name).includes(appName)) return
+  const handleDoubleClick = (clickedApp: App) => {
+    if(apps.map(app => app.id).includes(clickedApp.id)) return
 
     setApps([
       ...apps,
-      {
-        name: appName,
-        dimensions: { width: 300, height: 500 },
-        minimized: false,
-        top: 0,
-        left: 0,
-        id: 'asf'
-      }
+      clickedApp
     ])
   }
 
   return (
     <div>
-      <DesktopApp name="calculator" onAppDoubleClick={() => handleDoubleClick('calculator')} />
+      { availableApps.map(app => <DesktopApp name={app.name} onAppDoubleClick={() => handleDoubleClick(app)} />)}
     </div>
   )
 }

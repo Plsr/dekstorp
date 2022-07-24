@@ -37,7 +37,7 @@ const DragContainer: FC<any> = ({ children }) => {
   return (
     <Wrapper ref={drop}>
       { apps.filter(app => !app.minimized).map(app => (
-        <AppWindow key={app.id} name={app.name} dimensions={app.dimensions} left={app.left} top={app.top} id="asf" />
+        <AppWindow key={app.id} app={app} />
       ))}
       { children }
     </Wrapper>
