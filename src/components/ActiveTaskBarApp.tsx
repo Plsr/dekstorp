@@ -1,9 +1,9 @@
 import { FC } from 'react'
 import styled from 'styled-components'
 
-const ActiveTaskBarApp: FC<ActiveTaksBarAppProps> = ({ name, className }) => {
+const ActiveTaskBarApp: FC<ActiveTaksBarAppProps> = ({ name, className, onAppClick }) => {
   return (
-    <Wrapper className={className}>{ name }</Wrapper>
+    <Wrapper className={className} onClick={onAppClick}>{ name }</Wrapper>
   )
 }
 
@@ -20,7 +20,8 @@ const Wrapper = styled.div`
 
 interface ActiveTaksBarAppProps {
   name: string,
-  className?: string
+  className?: string,
+  onAppClick(): void
 }
 
 export default ActiveTaskBarApp

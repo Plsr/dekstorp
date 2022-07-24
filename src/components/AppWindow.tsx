@@ -1,6 +1,7 @@
 import { FC, useContext } from 'react'
 import styled from 'styled-components'
 import { useDrag } from 'react-dnd'
+import { MdMinimize, MdClose } from "react-icons/md";
 
 import { AppsContext } from '../context/AppsContext'
 
@@ -23,13 +24,23 @@ const AppWindow: FC<AppWindowProps> = ({ name, dimensions, id, left, top }) => {
     setApps(appsWithoutCurrent)
   }
 
+  const handleMimimizeClick = () => {
+    const appIndex = apps.findIndex(app => app.name === name)
+    const appsCopy = [...apps]
+    appsCopy[appIndex].minimized = true
+    setApps(appsCopy)
+  }
+
   if (isDragging) {
     return <div ref={drag} />
   }
 
   return (
     <Window width={dimensions.width} height={dimensions.height} left={left} top={top} ref={drag} >
-      <TitleBar><CloseButton onClick={handleCloseClick}>X</CloseButton></TitleBar>
+      <TitleBar>
+        <TitleBarButton onClick={handleMimimizeClick}><MdMinimize /></TitleBarButton>
+        <TitleBarButton onClick={handleCloseClick}><MdClose /></TitleBarButton>
+      </TitleBar>
       <Content>{ name }</Content>
     </Window>
   )
@@ -49,7 +60,7 @@ const Content = styled.div`
 
 `
 
-const CloseButton = styled.div`
+const TitleBarButton = styled.div`
   cursor: pointer;
 `
 
