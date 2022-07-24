@@ -13,7 +13,7 @@ const DesktopApps: FC<any> = () => {
       ...apps,
       {
         name: appName,
-        dimensions: { width: 200, height: 200 },
+        dimensions: { width: 300, height: 500 },
         minimized: false,
         top: 0,
         left: 0,

@@ -1,4 +1,4 @@
-import { FC, useContext } from 'react'
+import { FC, useContext, DragEvent } from 'react'
 import styled from 'styled-components'
 import { useDrag } from 'react-dnd'
 import { MdMinimize, MdClose } from "react-icons/md";
@@ -31,6 +31,11 @@ const AppWindow: FC<AppWindowProps> = ({ name, dimensions, id, left, top }) => {
     setApps(appsCopy)
   }
 
+  const disableDrag = (event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault()
+    event.stopPropagation()
+  }
+
   if (isDragging) {
     return <div ref={drag} />
   }
@@ -41,7 +46,12 @@ const AppWindow: FC<AppWindowProps> = ({ name, dimensions, id, left, top }) => {
         <TitleBarButton onClick={handleMimimizeClick}><MdMinimize /></TitleBarButton>
         <TitleBarButton onClick={handleCloseClick}><MdClose /></TitleBarButton>
       </TitleBar>
-      <Content>{ name }</Content>
+      <Content
+        draggable
+        onDragStart={disableDrag}
+      >
+        { name }
+      </Content>
     </Window>
   )
 }
@@ -57,7 +67,8 @@ const TitleBar = styled.div`
 `
 
 const Content = styled.div`
-
+  width: 100%;
+  height: 100%;
 `
 
 const TitleBarButton = styled.div`
