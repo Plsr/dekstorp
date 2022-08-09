@@ -34,21 +34,23 @@ const StartButton = styled.div`
   padding: 0rem 1rem;
   display: flex;
   align-items: center;
-  background-color: #6daa84;
+  background-color: #616ae8;
   cursor: pointer;
 `
 
 const ActiveAppsWrapper = styled.div`
   flex-grow: 1;
   display: flex;
-  background-color: #d5e5db;
+  background-color: #edfbfc;
   color: #333;
+  padding: 5px 10px;
 `
 
 const StyledDateTimeWidget = styled(DateTimeWidget)`
   flex-shrink: 0;
   font-size: 0.8rem;
-  background-color: #1c2620;
+  color: #131d3d;
+  background-color: #cae1e3;
 `
 
 const TaskBarWrapper = styled.div`

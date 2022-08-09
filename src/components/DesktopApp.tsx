@@ -1,7 +1,6 @@
 import { FC, useState } from 'react'
 import styled from 'styled-components'
 
-import { App } from '../context/AppsContext'
 
 const DesktopApp: FC<DesktopAppProps> = ({ name, onAppDoubleClick }) => {
   // TODO: Has to be handled with props later on to keep highlighted apps in sync

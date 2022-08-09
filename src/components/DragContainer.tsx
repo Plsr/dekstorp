@@ -17,7 +17,8 @@ const DragContainer: FC<any> = ({ children }) => {
 }
 
 const Wrapper = styled.div`
-  background-color: rgba(31,211,100, 0.2);
+  background: rgb(253,235,255);
+  background: linear-gradient(167deg, rgba(253,235,255,1) 0%, rgba(210,247,255,1) 100%);
   width: 100vw;
   height: calc(100vh - 50px);
   position: absolute;
