@@ -1,10 +1,17 @@
-import { FC, useState } from 'react'
+import { FC, useState, lazy } from 'react'
 import styled from 'styled-components'
+
+const images = require.context('../images/app-icons', true);
 
 
 const DesktopApp: FC<DesktopAppProps> = ({ name, onAppDoubleClick }) => {
   // TODO: Has to be handled with props later on to keep highlighted apps in sync
   const [selected, setSelected] = useState(false)
+
+  const mockIconName = "calculator-icon.svg"
+  const icon = images(`./${mockIconName}`);
+
+
 
   const handleClick = (event: any) => {
     console.log('double click')
@@ -13,7 +20,7 @@ const DesktopApp: FC<DesktopAppProps> = ({ name, onAppDoubleClick }) => {
 
   return(
     <Wrapper onDoubleClick={handleClick}>
-      <Icon />
+      <Icon src={icon} alt="Logo" />
       <Name>{ name }</Name>
     </Wrapper>
   )
@@ -23,10 +30,9 @@ const Name = styled.div`
   text-overflow: ellipsis;
 `
 
-const Icon = styled.div`
-  width: 32px;
-  height: 32px;
-  background-color: red;
+const Icon = styled.img`
+  width: 40px;
+  height: 40px;
 `
 
 const Wrapper = styled.div`
