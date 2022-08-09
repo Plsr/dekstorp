@@ -10,6 +10,7 @@ export const availableApps: App[] = [
     top: 0,
     left: 0,
     id: 'calculator',
-    component: <CalculatorApp />
+    component: <CalculatorApp />,
+    icon: 'calculator-icon.svg'
   }
 ]

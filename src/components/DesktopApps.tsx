@@ -18,7 +18,14 @@ const DesktopApps: FC<any> = () => {
 
   return (
     <div>
-      { availableApps.map(app => <DesktopApp key={app.name} name={app.name} onAppDoubleClick={() => handleDoubleClick(app)} />)}
+      { availableApps.map(app => 
+        <DesktopApp
+          key={app.name}
+          name={app.name}
+          onAppDoubleClick={() => handleDoubleClick(app)}
+          iconName={app.icon}
+        />
+      )}
     </div>
   )
 }
