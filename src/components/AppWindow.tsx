@@ -1,4 +1,4 @@
-import { FC, useContext, DragEvent } from 'react'
+import { FC, useContext, DragEvent, useRef } from 'react'
 import styled from 'styled-components'
 import { MdMinimize, MdClose } from "react-icons/md";
 import Draggable from 'react-draggable';
@@ -6,8 +6,9 @@ import Draggable from 'react-draggable';
 import { App, AppsContext } from '../context/AppsContext'
 
 const AppWindow: FC<AppWindowProps> = ({ app, className }) => {
-  const { name, dimensions, component } = app
+  const { left, top, name, dimensions, component } = app
   const { apps, setApps } = useContext(AppsContext)
+  const windowRef = useRef(null)
 
   const handleCloseClick = () => {
     const appsWithoutCurrent = apps.filter(app => app.name !== name)
@@ -15,9 +16,15 @@ const AppWindow: FC<AppWindowProps> = ({ app, className }) => {
   }
 
   const handleMimimizeClick = () => {
+    const dimensions = (windowRef.current! as HTMLElement).getBoundingClientRect()
     const appIndex = apps.findIndex(app => app.name === name)
     const appsCopy = [...apps]
-    appsCopy[appIndex].minimized = true
+    appsCopy[appIndex] = {
+      ...appsCopy[appIndex],
+      minimized: true,
+      left: dimensions.x,
+      top: dimensions.y
+    }
     setApps(appsCopy)
   }
 
@@ -27,8 +34,8 @@ const AppWindow: FC<AppWindowProps> = ({ app, className }) => {
   }
 
   return (
-    <Draggable bounds="parent">
-      <Window width={dimensions.width} height={dimensions.height} className={className}>
+    <Draggable bounds="parent" defaultPosition={{ x: left, y: top }}>
+      <Window width={dimensions.width} height={dimensions.height} className={className} ref={windowRef}>
         <TitleBar>
           <TitleBarButton onClick={handleMimimizeClick}><MdMinimize /></TitleBarButton>
           <TitleBarButton onClick={handleCloseClick}><MdClose /></TitleBarButton>
