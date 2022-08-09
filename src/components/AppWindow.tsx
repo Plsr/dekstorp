@@ -34,9 +34,9 @@ const AppWindow: FC<AppWindowProps> = ({ app, className }) => {
   }
 
   return (
-    <Draggable bounds="parent" defaultPosition={{ x: left, y: top }}>
+    <Draggable bounds="parent" defaultPosition={{ x: left, y: top }} handle=".handle">
       <Window width={dimensions.width} height={dimensions.height} className={className} ref={windowRef}>
-        <TitleBar>
+        <TitleBar className='handle'>
           <TitleBarButton onClick={handleMimimizeClick}><MdMinimize /></TitleBarButton>
           <TitleBarButton onClick={handleCloseClick}><MdClose /></TitleBarButton>
         </TitleBar>
