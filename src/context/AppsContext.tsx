@@ -1,4 +1,4 @@
-import { createContext, useState, FC } from 'react'
+import { createContext, useState, ReactElement } from 'react'
 
 export type AppContextType = {
   setApps(apps: App[]): void
@@ -32,5 +32,5 @@ export interface App {
   left: number,
   top: number,
   id: string,
-  component: FC<any>
+  component: ReactElement
 }

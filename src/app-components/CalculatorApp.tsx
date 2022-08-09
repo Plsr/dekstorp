@@ -1,9 +1,11 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 
 const CalculatorApp: FC<any> = () => {
+  const [foo, setFoo] = useState('foo')
   return (
     <div>
-      Calculator App
+      <p>Calculator App: { foo }</p>
+      <button onClick={() => setFoo('bar')}>Bar</button>
     </div>
   )
 }

@@ -51,7 +51,7 @@ const AppWindow: FC<AppWindowProps> = ({ app }) => {
         draggable
         onDragStart={disableDrag}
       >
-       {component(null)}
+       {component}
       </Content>
     </Window>
   )
