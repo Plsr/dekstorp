@@ -1,24 +1,13 @@
 import { FC, useContext, DragEvent } from 'react'
 import styled from 'styled-components'
-import { useDrag } from 'react-dnd'
 import { MdMinimize, MdClose } from "react-icons/md";
+import Draggable from 'react-draggable';
 
 import { App, AppsContext } from '../context/AppsContext'
 
-const AppWindow: FC<AppWindowProps> = ({ app }) => {
-  const { id, left, top, name, dimensions, component } = app
+const AppWindow: FC<AppWindowProps> = ({ app, className }) => {
+  const { name, dimensions, component } = app
   const { apps, setApps } = useContext(AppsContext)
-
-  const [{ isDragging }, drag] = useDrag(
-    () => ({
-      type: 'foo',
-      item: { id, left, top },
-      collect: (monitor) => ({
-        isDragging: monitor.isDragging(),
-      }),
-    }),
-    [id, left, top],
-  )
 
   const handleCloseClick = () => {
     const appsWithoutCurrent = apps.filter(app => app.name !== name)
@@ -37,23 +26,21 @@ const AppWindow: FC<AppWindowProps> = ({ app }) => {
     event.stopPropagation()
   }
 
-  if (isDragging) {
-    return <div ref={drag} />
-  }
-
   return (
-    <Window width={dimensions.width} height={dimensions.height} left={left} top={top} ref={drag} >
-      <TitleBar>
-        <TitleBarButton onClick={handleMimimizeClick}><MdMinimize /></TitleBarButton>
-        <TitleBarButton onClick={handleCloseClick}><MdClose /></TitleBarButton>
-      </TitleBar>
-      <Content
-        draggable
-        onDragStart={disableDrag}
-      >
-       {component}
-      </Content>
-    </Window>
+    <Draggable bounds="parent">
+      <Window width={dimensions.width} height={dimensions.height} className={className}>
+        <TitleBar>
+          <TitleBarButton onClick={handleMimimizeClick}><MdMinimize /></TitleBarButton>
+          <TitleBarButton onClick={handleCloseClick}><MdClose /></TitleBarButton>
+        </TitleBar>
+        <Content
+          draggable
+          onDragStart={disableDrag}
+        >
+        {component}
+        </Content>
+      </Window>
+    </Draggable>
   )
 }
 const TitleBar = styled.div`
@@ -76,18 +63,17 @@ const TitleBarButton = styled.div`
   cursor: pointer;
 `
 
-const Window = styled.div<{ width: number, height: number, left: number, top: number }>`
+const Window = styled.div<{ width: number, height: number }>`
   width: ${props => props.width + 'px'};
   height: ${props => props.height + 'px'};
   background-color: white;
   position: absolute;
   pointer-events: auto;
-  left: ${props => props.left + 'px'};
-  top: ${props => props.top + 'px'};
 `
 
 interface AppWindowProps {
   app: App
+  className?: string
 }
 
 export default AppWindow
