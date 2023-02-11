@@ -1,4 +1,4 @@
-import { SyntheticEvent, useState, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { Note } from '../../app-components/NotesApp'
 import { Editor, EditorState } from 'draft-js'
 

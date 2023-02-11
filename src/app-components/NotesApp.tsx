@@ -1,14 +1,61 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid'
-import { EditorState } from 'draft-js'
+import {
+  ContentState,
+  convertFromRaw,
+  convertToRaw,
+  EditorState,
+} from 'draft-js'
 
 import { EditorToolbar } from '../components/notes/EditorToolbar'
 import { NotesEditor } from '../components/notes/NotesEditor'
 import { NotesSidebarItem } from '../components/notes/NotesSidebarItem'
 
-export const NotesApp = () => {
+export const NotesApp = ({ shouldClose, onCloseConfirm }: any) => {
   const [notes, setNotes] = useState<Note[]>([])
   const [currentNote, setCurrentNote] = useState<Note>()
+
+  useEffect(() => {
+    // Do nothing if the close command has not been issued
+    if (!shouldClose) return
+
+    // TODO: New type
+    const preparedNotes = notes.map((note) => {
+      const preparedContent = note.content
+        ? convertToRaw(note.content.getCurrentContent())
+        : null
+      return {
+        ...note,
+        content: preparedContent,
+      }
+    })
+
+    const stringNotes = JSON.stringify(preparedNotes)
+    localStorage.setItem('notes', stringNotes)
+    onCloseConfirm()
+  }, [shouldClose, onCloseConfirm, notes])
+
+  useEffect(() => {
+    const storedNotes = localStorage.getItem('notes')
+    if (!storedNotes) return
+
+    const parsedNotes = JSON.parse(storedNotes)
+
+    // TODO: New type
+    setNotes(
+      parsedNotes.map((note: any) => {
+        const content = note.content
+          ? EditorState.createWithContent(convertFromRaw(note.content))
+          : EditorState.createEmpty()
+
+        return {
+          ...note,
+          createdAt: new Date(note.createdAt),
+          content,
+        }
+      }),
+    )
+  }, [])
 
   const handleNewClick = () => {
     console.log('Will create new note')
