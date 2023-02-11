@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import Desktop from './components/Desktop'
-import { AppsProvider } from './context/AppsContext';
+import { AppsProvider } from './context/AppsContext'
+import './index.css'
 
 function App() {
   return (
@@ -9,11 +10,10 @@ function App() {
         <Desktop />
       </Wrapper>
     </AppsProvider>
-  );
+  )
 }
 
-export default App;
-
+export default App
 
 const Wrapper = styled.div`
   background-color: #666;
