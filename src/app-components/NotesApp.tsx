@@ -22,6 +22,7 @@ export type Note = {
   title: string
   createdAt: Date
   content: EditorState
+  notesApiVersion: number
 }
 
 export type StoredNote = {
@@ -29,7 +30,10 @@ export type StoredNote = {
   title: string
   createdAt: string
   content: RawDraftContentState
+  notesApiVersion: number
 }
+
+const NOTES_VERSION = 1
 
 export const NotesApp = ({ shouldClose, onCloseConfirm }: NotesAppProps) => {
   const [notes, setNotes] = useState<Note[]>([])
@@ -78,6 +82,7 @@ export const NotesApp = ({ shouldClose, onCloseConfirm }: NotesAppProps) => {
       title: 'No title',
       createdAt: new Date(),
       content: EditorState.createEmpty(),
+      notesApiVersion: NOTES_VERSION,
     }
     setNotes([...notes, newNote])
 
