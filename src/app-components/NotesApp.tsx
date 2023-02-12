@@ -21,6 +21,7 @@ export type Note = {
   id: string
   title: string
   createdAt: Date
+  updatedAt: Date
   content: EditorState
   notesApiVersion: number
 }
@@ -29,6 +30,7 @@ export type StoredNote = {
   id: string
   title: string
   createdAt: string
+  updatedAt: string
   content: RawDraftContentState
   notesApiVersion: number
 }
@@ -45,6 +47,7 @@ export const NotesApp = ({ shouldClose, onCloseConfirm }: NotesAppProps) => {
       return {
         ...note,
         createdAt: note.createdAt.toString(),
+        updatedAt: note.updatedAt.toString(),
         content: preparedContent,
       }
     }) as StoredNote[]
@@ -62,17 +65,22 @@ export const NotesApp = ({ shouldClose, onCloseConfirm }: NotesAppProps) => {
     const parsedNotes = JSON.parse(storedNotes) as StoredNote[]
 
     setNotes(
-      parsedNotes.map((note) => {
-        const content = EditorState.createWithContent(
-          convertFromRaw(note.content),
-        )
+      parsedNotes
+        .map((note) => {
+          const content = EditorState.createWithContent(
+            convertFromRaw(note.content),
+          )
 
-        return {
-          ...note,
-          createdAt: new Date(note.createdAt),
-          content,
-        }
-      }),
+          return {
+            ...note,
+            createdAt: new Date(note.createdAt),
+            updatedAt: new Date(note.updatedAt),
+            content,
+          }
+        })
+        .sort((a, b) => {
+          return b.updatedAt.getTime() - a.updatedAt.getTime()
+        }),
     )
   }, [])
 
@@ -81,10 +89,12 @@ export const NotesApp = ({ shouldClose, onCloseConfirm }: NotesAppProps) => {
       id: uuid(),
       title: 'No title',
       createdAt: new Date(),
+      updatedAt: new Date(),
       content: EditorState.createEmpty(),
       notesApiVersion: NOTES_VERSION,
     }
-    setNotes([...notes, newNote])
+
+    setNotes([newNote, ...notes])
 
     setCurrentNote(newNote)
   }
@@ -94,13 +104,18 @@ export const NotesApp = ({ shouldClose, onCloseConfirm }: NotesAppProps) => {
 
     const title =
       payload.getCurrentContent().getPlainText().split('\n')[0] || 'No Title'
-    const updatedNote = { ...currentNote, title, content: payload }
+    const updatedNote = {
+      ...currentNote,
+      title,
+      content: payload,
+      updatedAt: new Date(),
+    }
 
     setCurrentNote(updatedNote)
     const notesWithoutCurrent = notes.filter(
       (note) => note.id !== currentNote.id,
     )
-    setNotes([...notesWithoutCurrent, updatedNote])
+    setNotes([updatedNote, ...notesWithoutCurrent])
   }
 
   const handleSidbarItemClick = (id: string) => {
