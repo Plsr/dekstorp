@@ -11,7 +11,12 @@ import { EditorToolbar } from '../components/notes/EditorToolbar'
 import { NotesEditor } from '../components/notes/NotesEditor'
 import { NotesSidebarItem } from '../components/notes/NotesSidebarItem'
 
-export const NotesApp = ({ shouldClose, onCloseConfirm }: any) => {
+type NotesAppProps = {
+  shouldClose: boolean
+  onCloseConfirm: () => void
+}
+
+export const NotesApp = ({ shouldClose, onCloseConfirm }: NotesAppProps) => {
   const [notes, setNotes] = useState<Note[]>([])
   const [currentNote, setCurrentNote] = useState<Note>()
 

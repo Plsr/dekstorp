@@ -31,6 +31,6 @@ export interface App {
   left: number
   top: number
   id: string
-  component: ReactElement
+  component: any
   icon: string
 }

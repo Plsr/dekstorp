@@ -63,7 +63,7 @@ const AppWindow: FC<AppWindowProps> = ({ app, className }) => {
           </TitleBarControls>
         </TitleBar>
         <Content draggable onDragStart={disableDrag}>
-          {React.cloneElement(component, {
+          {React.createElement(component, {
             shouldClose: shouldClose,
             onCloseConfirm: handleCloseConfirm,
           })}

@@ -1,7 +1,21 @@
-import { FC, useState } from 'react'
+import { useEffect, useState } from 'react'
 
-const CalculatorApp: FC<any> = () => {
+type CalculatorAppProps = {
+  shouldClose: boolean
+  onCloseConfirm: () => void
+}
+
+export const CalculatorApp = ({
+  shouldClose,
+  onCloseConfirm,
+}: CalculatorAppProps) => {
   const [foo, setFoo] = useState('foo')
+
+  useEffect(() => {
+    if (!shouldClose) return
+    onCloseConfirm()
+  }, [shouldClose, onCloseConfirm])
+
   return (
     <div>
       <p>Calculator App: {foo}</p>
@@ -9,5 +23,3 @@ const CalculatorApp: FC<any> = () => {
     </div>
   )
 }
-
-export default CalculatorApp
