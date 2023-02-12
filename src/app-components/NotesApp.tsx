@@ -10,6 +10,7 @@ import {
 import { EditorToolbar } from '../components/notes/EditorToolbar'
 import { NotesEditor } from '../components/notes/NotesEditor'
 import { NotesSidebarItem } from '../components/notes/NotesSidebarItem'
+import { useHandleClose } from '../hooks/useHandleClose'
 
 type NotesAppProps = {
   shouldClose: boolean
@@ -20,11 +21,7 @@ export const NotesApp = ({ shouldClose, onCloseConfirm }: NotesAppProps) => {
   const [notes, setNotes] = useState<Note[]>([])
   const [currentNote, setCurrentNote] = useState<Note>()
 
-  useEffect(() => {
-    // Do nothing if the close command has not been issued
-    if (!shouldClose) return
-
-    // TODO: New type
+  const saveNotes = () => {
     const preparedNotes = notes.map((note) => {
       const preparedContent = note.content
         ? convertToRaw(note.content.getCurrentContent())
@@ -37,8 +34,9 @@ export const NotesApp = ({ shouldClose, onCloseConfirm }: NotesAppProps) => {
 
     const stringNotes = JSON.stringify(preparedNotes)
     localStorage.setItem('notes', stringNotes)
-    onCloseConfirm()
-  }, [shouldClose, onCloseConfirm, notes])
+  }
+
+  useHandleClose(shouldClose, saveNotes, onCloseConfirm)
 
   useEffect(() => {
     const storedNotes = localStorage.getItem('notes')

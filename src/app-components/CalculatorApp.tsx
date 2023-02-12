@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { useHandleClose } from '../hooks/useHandleClose'
 
 type CalculatorAppProps = {
   shouldClose: boolean
@@ -10,11 +11,7 @@ export const CalculatorApp = ({
   onCloseConfirm,
 }: CalculatorAppProps) => {
   const [foo, setFoo] = useState('foo')
-
-  useEffect(() => {
-    if (!shouldClose) return
-    onCloseConfirm()
-  }, [shouldClose, onCloseConfirm])
+  useHandleClose(shouldClose, () => {}, onCloseConfirm)
 
   return (
     <div>
