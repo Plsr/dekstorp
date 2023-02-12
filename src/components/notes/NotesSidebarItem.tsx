@@ -13,8 +13,6 @@ export const NotesSidebarItem = ({
   onClick,
   active,
 }: NotesSidebarItemProps) => {
-  console.log(title)
-  console.log(createdAt)
   return (
     <div
       className={clsx(

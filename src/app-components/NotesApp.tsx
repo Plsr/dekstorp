@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid'
 import {
-  ContentState,
   convertFromRaw,
   convertToRaw,
   EditorState,
+  RawDraftContentState,
 } from 'draft-js'
 
 import { EditorToolbar } from '../components/notes/EditorToolbar'
@@ -17,20 +17,33 @@ type NotesAppProps = {
   onCloseConfirm: () => void
 }
 
+export type Note = {
+  id: string
+  title: string
+  createdAt: Date
+  content: EditorState
+}
+
+export type StoredNote = {
+  id: string
+  title: string
+  createdAt: string
+  content: RawDraftContentState
+}
+
 export const NotesApp = ({ shouldClose, onCloseConfirm }: NotesAppProps) => {
   const [notes, setNotes] = useState<Note[]>([])
   const [currentNote, setCurrentNote] = useState<Note>()
 
   const saveNotes = () => {
     const preparedNotes = notes.map((note) => {
-      const preparedContent = note.content
-        ? convertToRaw(note.content.getCurrentContent())
-        : null
+      const preparedContent = convertToRaw(note.content.getCurrentContent())
       return {
         ...note,
+        createdAt: note.createdAt.toString(),
         content: preparedContent,
       }
-    })
+    }) as StoredNote[]
 
     const stringNotes = JSON.stringify(preparedNotes)
     localStorage.setItem('notes', stringNotes)
@@ -42,14 +55,13 @@ export const NotesApp = ({ shouldClose, onCloseConfirm }: NotesAppProps) => {
     const storedNotes = localStorage.getItem('notes')
     if (!storedNotes) return
 
-    const parsedNotes = JSON.parse(storedNotes)
+    const parsedNotes = JSON.parse(storedNotes) as StoredNote[]
 
-    // TODO: New type
     setNotes(
-      parsedNotes.map((note: any) => {
-        const content = note.content
-          ? EditorState.createWithContent(convertFromRaw(note.content))
-          : EditorState.createEmpty()
+      parsedNotes.map((note) => {
+        const content = EditorState.createWithContent(
+          convertFromRaw(note.content),
+        )
 
         return {
           ...note,
@@ -61,11 +73,11 @@ export const NotesApp = ({ shouldClose, onCloseConfirm }: NotesAppProps) => {
   }, [])
 
   const handleNewClick = () => {
-    console.log('Will create new note')
     const newNote = {
       id: uuid(),
       title: 'No title',
       createdAt: new Date(),
+      content: EditorState.createEmpty(),
     }
     setNotes([...notes, newNote])
 
@@ -110,11 +122,4 @@ export const NotesApp = ({ shouldClose, onCloseConfirm }: NotesAppProps) => {
       </div>
     </div>
   )
-}
-
-export type Note = {
-  id: string
-  title: string
-  createdAt: Date
-  content?: EditorState // TODO: Always init emtpy?
 }
