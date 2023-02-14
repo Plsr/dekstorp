@@ -99,6 +99,18 @@ export const NotesApp = ({ shouldClose, onCloseConfirm }: NotesAppProps) => {
     setCurrentNote(newNote)
   }
 
+  const handleDeleteClick = () => {
+    if (!currentNote) {
+      return
+    }
+    const notesWithoutCurrent = notes.filter(
+      (note) => note.id !== currentNote.id,
+    )
+
+    setCurrentNote(undefined)
+    setNotes([...notesWithoutCurrent])
+  }
+
   const handleEditorChange = (payload: EditorState) => {
     if (!currentNote) return
 
@@ -124,7 +136,10 @@ export const NotesApp = ({ shouldClose, onCloseConfirm }: NotesAppProps) => {
 
   return (
     <div className="h-full">
-      <EditorToolbar onNewClick={handleNewClick} />
+      <EditorToolbar
+        onNewClick={handleNewClick}
+        onDeleteClick={handleDeleteClick}
+      />
       <div className="flex h-full">
         <div className="w-1/4 flex-shrink-0 bg-slate-700">
           {notes.map((note) => (
