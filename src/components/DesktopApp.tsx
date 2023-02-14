@@ -1,23 +1,27 @@
 import { FC, useState } from 'react'
 import styled from 'styled-components'
 
-const images = require.context('../images/app-icons', true);
+const images = require.context('../images/app-icons', true)
 
-const DesktopApp: FC<DesktopAppProps> = ({ name, onAppDoubleClick, iconName }) => {
+const DesktopApp: FC<DesktopAppProps> = ({
+  name,
+  onAppDoubleClick,
+  iconName,
+}) => {
   // TODO: Has to be handled with props later on to keep highlighted apps in sync
   const [selected, setSelected] = useState(false)
 
-  const icon = images(`./${iconName}`);
+  const icon = images(`./${iconName}`)
 
   const handleClick = (event: any) => {
     console.log('double click')
     onAppDoubleClick()
   }
 
-  return(
+  return (
     <Wrapper onDoubleClick={handleClick}>
       <Icon src={icon} alt="Logo" />
-      <Name>{ name }</Name>
+      <Name>{name}</Name>
     </Wrapper>
   )
 }
@@ -29,6 +33,7 @@ const Name = styled.div`
 const Icon = styled.img`
   width: 40px;
   height: 40px;
+  box-shadow: 0px 0px 10px #ddd;
 `
 
 const Wrapper = styled.div`
@@ -39,13 +44,13 @@ const Wrapper = styled.div`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: .5rem;
-  cursor: pointer;
+  padding: 0.5rem;
+  cursor: pointer; ;
 `
 
 interface DesktopAppProps {
   name: string
-  onAppDoubleClick(): void,
+  onAppDoubleClick(): void
   iconName: string
 }
 

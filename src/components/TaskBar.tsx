@@ -1,7 +1,7 @@
 import { FC, useContext } from 'react'
 import styled from 'styled-components'
 
-import { AppsContext ,App } from '../context/AppsContext'
+import { AppsContext, App } from '../context/AppsContext'
 import DateTimeWidget from './DateTimeWidget'
 import ActiveTaskBarApp from './ActiveTaskBarApp'
 
@@ -9,7 +9,7 @@ const TaskBar: FC<any> = () => {
   const { apps, setApps } = useContext(AppsContext)
 
   const handleAppClick = (candidateApp: App) => {
-    const appIndex = apps.findIndex(app => app.name === candidateApp.name)
+    const appIndex = apps.findIndex((app) => app.name === candidateApp.name)
     const appsCopy = [...apps]
     appsCopy[appIndex].minimized = false
     setApps(appsCopy)
@@ -17,9 +17,17 @@ const TaskBar: FC<any> = () => {
 
   return (
     <TaskBarWrapper>
-      <StartButton><span>Start</span></StartButton>
+      <StartButton>
+        <span>Start</span>
+      </StartButton>
       <ActiveAppsWrapper>
-        { apps?.map(app =>  <StyledActiveTaksBarApp key={app.id} name={app.name} onAppClick={() => handleAppClick(app)} />)}
+        {apps?.map((app) => (
+          <StyledActiveTaksBarApp
+            key={app.id}
+            name={app.name}
+            onAppClick={() => handleAppClick(app)}
+          />
+        ))}
       </ActiveAppsWrapper>
       <StyledDateTimeWidget />
     </TaskBarWrapper>

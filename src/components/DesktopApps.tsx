@@ -8,24 +8,21 @@ const DesktopApps: FC<any> = () => {
   const { apps, setApps } = useContext(AppsContext)
 
   const handleDoubleClick = (clickedApp: App) => {
-    if(apps.map(app => app.id).includes(clickedApp.id)) return
+    if (apps.map((app) => app.id).includes(clickedApp.id)) return
 
-    setApps([
-      ...apps,
-      clickedApp
-    ])
+    setApps([...apps, clickedApp])
   }
 
   return (
     <div>
-      { availableApps.map(app => 
+      {availableApps.map((app) => (
         <DesktopApp
           key={app.name}
           name={app.name}
           onAppDoubleClick={() => handleDoubleClick(app)}
           iconName={app.icon}
         />
-      )}
+      ))}
     </div>
   )
 }

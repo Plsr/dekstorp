@@ -4,7 +4,9 @@ import { buildTimeString, hoursMinutesFromString } from '../util/time'
 
 const DateTimeWidget: FC<any> = ({ className }) => {
   const [date, setDate] = useState(new Date().toDateString())
-  const [time, setTime] = useState(buildTimeString(new Date().getHours(), new Date().getMinutes()))
+  const [time, setTime] = useState(
+    buildTimeString(new Date().getHours(), new Date().getMinutes()),
+  )
 
   useEffect(() => {
     setInterval(() => {
@@ -19,8 +21,8 @@ const DateTimeWidget: FC<any> = ({ className }) => {
 
   return (
     <Wrapper className={className}>
-      <div>{ date }</div>
-      <div>{ time }</div>
+      <div>{date}</div>
+      <div>{time}</div>
     </Wrapper>
   )
 }

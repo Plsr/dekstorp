@@ -10,7 +10,6 @@ export const AppsContext = createContext<AppContextType>({
   apps: [],
 })
 
-
 export const AppsProvider = ({ children }: Props) => {
   const [apps, setApps] = useState<App[]>([])
 
@@ -27,11 +26,11 @@ interface Props {
 
 export interface App {
   name: string
-  dimensions: { width: number, height: number }
-  minimized: boolean,
-  left: number,
-  top: number,
-  id: string,
-  component: ReactElement,
+  dimensions: { width: number; height: number }
+  minimized: boolean
+  left: number
+  top: number
+  id: string
+  component: any
   icon: string
 }
