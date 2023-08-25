@@ -1,13 +1,15 @@
-import { FC, useContext } from 'react'
+import { FC } from 'react'
 
-import { AppsContext, App } from '../context/AppsContext'
 import { availableApps } from '../util/appDirectory'
 import DesktopApp from './DesktopApp'
+import { useAtom } from 'jotai'
+import { OsApplication, appsAtom } from '../App'
 
 const DesktopApps: FC<any> = () => {
-  const { apps, setApps } = useContext(AppsContext)
+  const [apps, setApps] = useAtom(appsAtom)
+  console.log(apps)
 
-  const handleDoubleClick = (clickedApp: App) => {
+  const handleDoubleClick = (clickedApp: OsApplication) => {
     if (apps.map((app) => app.id).includes(clickedApp.id)) return
 
     setApps([...apps, clickedApp])

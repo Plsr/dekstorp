@@ -1,10 +1,11 @@
-import { FC, useContext } from 'react'
+import { FC } from 'react'
 import styled from 'styled-components'
-import { AppsContext } from '../context/AppsContext'
 import AppWindow from './AppWindow'
+import { useAtomValue } from 'jotai'
+import { appsAtom } from '../App'
 
 const DragContainer: FC<any> = ({ children }) => {
-  const { apps } = useContext(AppsContext)
+  const apps = useAtomValue(appsAtom)
 
   return (
     <Wrapper>

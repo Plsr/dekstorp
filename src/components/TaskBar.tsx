@@ -1,14 +1,13 @@
-import { FC, useContext } from 'react'
 import styled from 'styled-components'
-
-import { AppsContext, App } from '../context/AppsContext'
 import DateTimeWidget from './DateTimeWidget'
 import ActiveTaskBarApp from './ActiveTaskBarApp'
+import { useAtom } from 'jotai'
+import { OsApplication, appsAtom } from '../App'
 
-const TaskBar: FC<any> = () => {
-  const { apps, setApps } = useContext(AppsContext)
+const TaskBar = () => {
+  const [apps, setApps] = useAtom(appsAtom)
 
-  const handleAppClick = (candidateApp: App) => {
+  const handleAppClick = (candidateApp: OsApplication) => {
     const appIndex = apps.findIndex((app) => app.name === candidateApp.name)
     const appsCopy = [...apps]
     appsCopy[appIndex].minimized = false
