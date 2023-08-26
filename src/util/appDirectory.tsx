@@ -1,4 +1,4 @@
-import { OsApplication } from '../App'
+import { OsApplication } from '../OsApplication'
 import { CalculatorApp } from '../app-components/CalculatorApp'
 import { NotesApp } from '../app-components/NotesApp'
 

@@ -1,11 +1,10 @@
 import { FC } from 'react'
 import styled from 'styled-components'
 import AppWindow from './AppWindow'
-import { useAtomValue } from 'jotai'
-import { appsAtom } from '../App'
+import { useApplicationManager } from '../hooks/useApplicationManager'
 
 const DragContainer: FC<any> = ({ children }) => {
-  const apps = useAtomValue(appsAtom)
+  const apps = useApplicationManager().activeApplications
 
   return (
     <Wrapper>

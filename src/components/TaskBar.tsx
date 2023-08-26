@@ -1,17 +1,14 @@
 import styled from 'styled-components'
 import DateTimeWidget from './DateTimeWidget'
 import ActiveTaskBarApp from './ActiveTaskBarApp'
-import { useAtom } from 'jotai'
-import { OsApplication, appsAtom } from '../App'
+import { OsApplication } from '../OsApplication'
+import { useApplicationManager } from '../hooks/useApplicationManager'
 
 const TaskBar = () => {
-  const [apps, setApps] = useAtom(appsAtom)
+  const { activeApplications, maximizeApp } = useApplicationManager()
 
   const handleAppClick = (candidateApp: OsApplication) => {
-    const appIndex = apps.findIndex((app) => app.name === candidateApp.name)
-    const appsCopy = [...apps]
-    appsCopy[appIndex].minimized = false
-    setApps(appsCopy)
+    maximizeApp(candidateApp.name)
   }
 
   return (
@@ -20,7 +17,7 @@ const TaskBar = () => {
         <span>Start</span>
       </StartButton>
       <ActiveAppsWrapper>
-        {apps?.map((app) => (
+        {activeApplications?.map((app) => (
           <StyledActiveTaksBarApp
             key={app.id}
             name={app.name}

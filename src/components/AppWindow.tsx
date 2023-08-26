@@ -4,29 +4,22 @@ import { MdMinimize, MdClose } from 'react-icons/md'
 import Draggable from 'react-draggable'
 
 import React from 'react'
-import { useAtom } from 'jotai'
-import { OsApplication, appsAtom } from '../App'
+import { OsApplication } from '../OsApplication'
+import { useApplicationManager } from '../hooks/useApplicationManager'
 
 const AppWindow = ({ app, className }: AppWindowProps) => {
   const { left, top, name, dimensions, component } = app
-  const [apps, setApps] = useAtom(appsAtom)
+  const { activeApplications, setAppActive, minimizeApp, closeApp } =
+    useApplicationManager()
   const windowRef = useRef(null)
   const [shouldClose, setShouldClose] = useState(false)
 
-  // TODO: Implement later with better soltuion for window storage state
   const handleTitleBarClick = () => {
-    console.log('title bar clicked')
-    // console.log(apps)
-    // console.log(app)
-    // if (apps[0].name === name) {
-    //   return
-    // }
+    if (activeApplications[0].name === name) {
+      return
+    }
 
-    // const appIndex = apps.findIndex((app) => app.name === name)
-    // const appsCopy = [...apps]
-    // appsCopy.splice(appIndex, 1)
-    // setApps([app, ...appsCopy])
-    // console.log(apps)
+    setAppActive(name)
   }
 
   const handleCloseClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -39,15 +32,8 @@ const AppWindow = ({ app, className }: AppWindowProps) => {
     const dimensions = (
       windowRef.current! as HTMLElement
     ).getBoundingClientRect()
-    const appIndex = apps.findIndex((app) => app.name === name)
-    const appsCopy = [...apps]
-    appsCopy[appIndex] = {
-      ...appsCopy[appIndex],
-      minimized: true,
-      left: dimensions.x,
-      top: dimensions.y,
-    }
-    setApps(appsCopy)
+
+    minimizeApp({ name, dimensions })
   }
 
   const disableDrag = (event: DragEvent<HTMLDivElement>) => {
@@ -56,8 +42,7 @@ const AppWindow = ({ app, className }: AppWindowProps) => {
   }
 
   const handleCloseConfirm = () => {
-    const appsWithoutCurrent = apps.filter((app) => app.name !== name)
-    setApps(appsWithoutCurrent)
+    closeApp(name)
   }
 
   return (
@@ -68,10 +53,13 @@ const AppWindow = ({ app, className }: AppWindowProps) => {
       <Window
         width={dimensions.width}
         height={dimensions.height}
-        index={apps.findIndex((app) => app.name === name)}
+        index={
+          activeApplications.length -
+          activeApplications.findIndex((app) => app.name === name)
+        }
         className={className}
         ref={windowRef}>
-        <TitleBar className="handle" onClick={handleTitleBarClick}>
+        <TitleBar className="handle" onMouseDown={handleTitleBarClick}>
           <TitleBarTitle>{name}</TitleBarTitle>
           <TitleBarControls>
             <TitleBarButton onClick={handleMimimizeClick}>
