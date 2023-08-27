@@ -1,10 +1,8 @@
 import { useState } from 'react'
 import { useHandleClose } from '../hooks/useHandleClose'
+import { GenericAppProps } from '../types/genericAppProps'
 
-type CalculatorAppProps = {
-  shouldClose: boolean
-  onCloseConfirm: () => void
-}
+type CalculatorAppProps = GenericAppProps
 
 export const CalculatorApp = ({
   shouldClose,

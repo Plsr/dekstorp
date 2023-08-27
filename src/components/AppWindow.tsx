@@ -4,18 +4,23 @@ import { MdMinimize, MdClose } from 'react-icons/md'
 import Draggable from 'react-draggable'
 
 import React from 'react'
-import { OsApplication } from '../OsApplication'
-import { useApplicationManager } from '../hooks/useApplicationManager'
+import {
+  OsApplication,
+  useApplicationManager,
+} from '../hooks/useApplicationManager'
 
 const AppWindow = ({ app, className }: AppWindowProps) => {
+  console.log(app)
   const { left, top, name, dimensions, component } = app
-  const { activeApplications, setAppActive, minimizeApp, closeApp } =
+  const { setAppActive, minimizeApp, closeApp, openApps } =
     useApplicationManager()
   const windowRef = useRef(null)
   const [shouldClose, setShouldClose] = useState(false)
 
+  const isActive = openApps[0] === name
+
   const handleTitleBarClick = () => {
-    if (activeApplications[0].name === name) {
+    if (isActive) {
       return
     }
 
@@ -45,6 +50,14 @@ const AppWindow = ({ app, className }: AppWindowProps) => {
     closeApp(name)
   }
 
+  const handleAppWindowClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (isActive) {
+      return
+    }
+
+    setAppActive(name)
+  }
+
   return (
     <Draggable
       bounds="parent"
@@ -54,8 +67,7 @@ const AppWindow = ({ app, className }: AppWindowProps) => {
         width={dimensions.width}
         height={dimensions.height}
         index={
-          activeApplications.length -
-          activeApplications.findIndex((app) => app.name === name)
+          openApps.length - openApps.findIndex((appName) => appName === name)
         }
         className={className}
         ref={windowRef}>
@@ -70,7 +82,19 @@ const AppWindow = ({ app, className }: AppWindowProps) => {
             </TitleBarButton>
           </TitleBarControls>
         </TitleBar>
-        <Content draggable onDragStart={disableDrag}>
+        <Content
+          draggable
+          onDragStart={disableDrag}
+          onClick={handleAppWindowClick}>
+          {!isActive && (
+            <div
+              className="absolute"
+              style={{
+                width: `${dimensions.width}px`,
+                height: `${dimensions.height}px`,
+              }}
+            />
+          )}
           {React.createElement(component, {
             shouldClose: shouldClose,
             onCloseConfirm: handleCloseConfirm,

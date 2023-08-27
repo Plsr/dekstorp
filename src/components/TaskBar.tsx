@@ -1,11 +1,11 @@
 import styled from 'styled-components'
 import DateTimeWidget from './DateTimeWidget'
 import ActiveTaskBarApp from './ActiveTaskBarApp'
-import { OsApplication } from '../OsApplication'
+import { OsApplication } from '../hooks/useApplicationManager'
 import { useApplicationManager } from '../hooks/useApplicationManager'
 
 const TaskBar = () => {
-  const { activeApplications, maximizeApp } = useApplicationManager()
+  const { appConfigs, maximizeApp } = useApplicationManager()
 
   const handleAppClick = (candidateApp: OsApplication) => {
     maximizeApp(candidateApp.name)
@@ -17,7 +17,7 @@ const TaskBar = () => {
         <span>Start</span>
       </StartButton>
       <ActiveAppsWrapper>
-        {activeApplications?.map((app) => (
+        {Object.values(appConfigs).map((app) => (
           <StyledActiveTaksBarApp
             key={app.id}
             name={app.name}

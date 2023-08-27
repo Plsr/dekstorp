@@ -1,16 +1,22 @@
 import { atom, useAtom } from 'jotai'
+import { FunctionComponent } from 'react'
+import { GenericAppProps } from '../types/genericAppProps'
+
+const openAppsAtom = atom<string[]>([])
+const appConfigsAtom = atom<{ [key: string]: OsApplication }>({})
 
 export const appsAtom = atom<OsApplication[]>([])
 
 export const useApplicationManager = () => {
-  const [activeApplications, setActiveApplications] = useAtom(appsAtom)
+  const [appConfigs, setAppConfigs] = useAtom(appConfigsAtom)
+  const [openApps, setOpenApps] = useAtom(openAppsAtom)
 
   const setAppActive = (name: string) => {
-    const appIndex = activeApplications.findIndex((app) => app.name === name)
-    const appsCopy = [...activeApplications]
-    appsCopy.splice(appIndex, 1)
-    appsCopy.unshift(activeApplications[appIndex])
-    setActiveApplications(appsCopy)
+    const appIndex = openApps.findIndex((appName) => appName === name)
+    const openAppsCopy = [...openApps]
+    openAppsCopy.splice(appIndex, 1)
+    openAppsCopy.unshift(openApps[appIndex])
+    setOpenApps(openAppsCopy)
   }
 
   const minimizeApp = ({
@@ -20,46 +26,67 @@ export const useApplicationManager = () => {
     name: string
     dimensions: { x: number; y: number }
   }) => {
-    const appIndex = activeApplications.findIndex((app) => app.name === name)
-    const appsCopy = [...activeApplications]
-    appsCopy[appIndex] = {
-      ...appsCopy[appIndex],
-      minimized: true,
-      left: dimensions.x,
-      top: dimensions.y,
-    }
-    setActiveApplications(appsCopy)
+    setAppConfigs(
+      _updateAppConfig({
+        name,
+        updateFields: {
+          left: dimensions.x,
+          top: dimensions.y,
+          minimized: true,
+        },
+      }),
+    )
   }
 
   const closeApp = (name: string) => {
-    const appIndex = activeApplications.findIndex((app) => app.name === name)
-    const appsCopy = [...activeApplications]
-    appsCopy.splice(appIndex, 1)
-    setActiveApplications(appsCopy)
+    const appConfigsCopy = { ...appConfigs }
+    delete appConfigsCopy[name]
+    setAppConfigs(appConfigsCopy)
+    const appIndex = openApps.findIndex((appName) => appName === name)
+    const openAppsCopy = [...openApps]
+    openAppsCopy.splice(appIndex, 1)
+    setOpenApps(openAppsCopy)
   }
 
   const launchApp = (app: OsApplication) => {
-    if (
-      activeApplications.filter((activeApp) => activeApp.id === app.id).length
-    ) {
+    if (appConfigs[app.name]) {
       return
     }
 
-    setActiveApplications([app, ...activeApplications])
+    const appConfigsCopy = {
+      ...appConfigs,
+      [app.name]: app,
+    }
+
+    setAppConfigs(appConfigsCopy)
+    setOpenApps([app.name, ...openApps])
   }
 
   const maximizeApp = (name: string) => {
-    const appIndex = activeApplications.findIndex((app) => app.name === name)
-    const appsCopy = [...activeApplications]
-    appsCopy[appIndex] = {
-      ...appsCopy[appIndex],
-      minimized: false,
+    setAppConfigs(
+      _updateAppConfig({ name, updateFields: { minimized: false } }),
+    )
+  }
+
+  const _updateAppConfig = ({
+    name,
+    updateFields,
+  }: {
+    name: string
+    updateFields: Partial<OsApplication>
+  }) => {
+    return {
+      ...appConfigs,
+      [name]: {
+        ...appConfigs[name],
+        ...updateFields,
+      },
     }
-    setActiveApplications(appsCopy)
   }
 
   return {
-    activeApplications,
+    appConfigs,
+    openApps,
     setAppActive,
     minimizeApp,
     closeApp,
@@ -75,6 +102,6 @@ export type OsApplication = {
   left: number
   top: number
   id: string
-  component: any
+  component: FunctionComponent<GenericAppProps>
   icon: string
 }

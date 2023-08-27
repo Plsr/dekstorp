@@ -1,4 +1,4 @@
-import { OsApplication } from '../OsApplication'
+import { OsApplication } from '../hooks/useApplicationManager'
 import { CalculatorApp } from '../app-components/CalculatorApp'
 import { NotesApp } from '../app-components/NotesApp'
 

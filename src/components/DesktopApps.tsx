@@ -2,7 +2,7 @@ import { FC } from 'react'
 
 import { availableApps } from '../util/appDirectory'
 import DesktopApp from './DesktopApp'
-import { OsApplication } from '../OsApplication'
+import { OsApplication } from '../hooks/useApplicationManager'
 import { useApplicationManager } from '../hooks/useApplicationManager'
 
 const DesktopApps: FC<any> = () => {

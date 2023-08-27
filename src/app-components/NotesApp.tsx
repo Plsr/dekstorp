@@ -11,11 +11,9 @@ import { EditorToolbar } from '../components/notes/EditorToolbar'
 import { NotesEditor } from '../components/notes/NotesEditor'
 import { NotesSidebarItem } from '../components/notes/NotesSidebarItem'
 import { useHandleClose } from '../hooks/useHandleClose'
+import { GenericAppProps } from '../types/genericAppProps'
 
-type NotesAppProps = {
-  shouldClose: boolean
-  onCloseConfirm: () => void
-}
+type NotesAppProps = GenericAppProps
 
 export type Note = {
   id: string

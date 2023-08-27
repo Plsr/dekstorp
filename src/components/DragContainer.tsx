@@ -4,11 +4,11 @@ import AppWindow from './AppWindow'
 import { useApplicationManager } from '../hooks/useApplicationManager'
 
 const DragContainer: FC<any> = ({ children }) => {
-  const apps = useApplicationManager().activeApplications
+  const apps = useApplicationManager().appConfigs
 
   return (
     <Wrapper>
-      {apps
+      {Object.values(apps)
         .filter((app) => !app.minimized)
         .map((app) => (
           <AppWindow key={app.id} app={app} />
