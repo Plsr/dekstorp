@@ -1,14 +1,14 @@
-import { FC, useContext } from 'react'
+import { FC } from 'react'
 import styled from 'styled-components'
-import { AppsContext } from '../context/AppsContext'
 import AppWindow from './AppWindow'
+import { useApplicationManager } from '../hooks/useApplicationManager'
 
 const DragContainer: FC<any> = ({ children }) => {
-  const { apps } = useContext(AppsContext)
+  const apps = useApplicationManager().appConfigs
 
   return (
     <Wrapper>
-      {apps
+      {Object.values(apps)
         .filter((app) => !app.minimized)
         .map((app) => (
           <AppWindow key={app.id} app={app} />

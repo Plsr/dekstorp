@@ -1,15 +1,12 @@
 import styled from 'styled-components'
 import Desktop from './components/Desktop'
-import { AppsProvider } from './context/AppsContext'
 import './index.css'
 
 function App() {
   return (
-    <AppsProvider>
-      <Wrapper>
-        <Desktop />
-      </Wrapper>
-    </AppsProvider>
+    <Wrapper>
+      <Desktop />
+    </Wrapper>
   )
 }
 
