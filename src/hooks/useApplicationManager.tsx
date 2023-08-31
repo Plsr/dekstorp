@@ -36,6 +36,11 @@ export const useApplicationManager = () => {
         },
       }),
     )
+
+    const appIndex = openApps.findIndex((appName) => appName === name)
+    const openAppsCopy = [...openApps]
+    openAppsCopy.splice(appIndex, 1)
+    setOpenApps([...openAppsCopy, name])
   }
 
   const closeApp = (name: string) => {
@@ -66,6 +71,10 @@ export const useApplicationManager = () => {
     setAppConfigs(
       _updateAppConfig({ name, updateFields: { minimized: false } }),
     )
+    const appIndex = openApps.findIndex((appName) => appName === name)
+    const openAppsCopy = [...openApps]
+    openAppsCopy.splice(appIndex, 1)
+    setOpenApps([name, ...openAppsCopy])
   }
 
   const _updateAppConfig = ({
