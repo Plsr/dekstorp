@@ -3,9 +3,27 @@ import DateTimeWidget from './DateTimeWidget'
 import { OsApplication } from '../hooks/useApplicationManager'
 import { useApplicationManager } from '../hooks/useApplicationManager'
 import clsx from 'clsx'
+import { useContextMenu } from '../hooks/useContextMenu'
+import { useRegisterRightClick } from '../hooks/useRegisterRightClick'
 
 const TaskBar = () => {
   const { appConfigs, maximizeApp, openApps } = useApplicationManager()
+  const openContextMenu = useContextMenu()
+
+  const handleContextMenuEvent = (e: any) => {
+    e.preventDefault()
+
+    const menu = (
+      <div className=" bg-gray-600">
+        <div>item</div>
+        <div>another item that has a very long name</div>
+      </div>
+    )
+
+    openContextMenu(menu, { x: e.clientX, y: e.clientY })
+  }
+
+  const rightClickTargetRef = useRegisterRightClick(handleContextMenuEvent)
 
   const handleAppClick = (candidateApp: OsApplication) => {
     maximizeApp(candidateApp.name)
@@ -16,7 +34,9 @@ const TaskBar = () => {
       <StartButton>
         <span>Start</span>
       </StartButton>
-      <div className="flex flex-1 bg-gray-200 gap-x-2 px-2 py-1">
+      <div
+        className="flex flex-1 bg-gray-200 gap-x-2 px-2 py-1 relative"
+        ref={rightClickTargetRef}>
         {Object.values(appConfigs).map((app) => (
           <div
             className={clsx(
