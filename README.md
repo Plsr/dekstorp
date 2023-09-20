@@ -2,6 +2,8 @@
 
 A try at building an OS in the browser, indpired by [Dustin Brett](https://dustinbrett.com/). No goals or purpose, just me playing around to see if I can do it.
 
+For updates, please see the [changelog](/CHANGELOG.md)
+
 ## Stuff that could be done
 ### Window Management
 - [ ] When clicking a background window, it should move to the foreground

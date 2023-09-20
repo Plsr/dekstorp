@@ -3,7 +3,7 @@ import { FunctionComponent } from 'react'
 import { GenericAppProps } from '../types/genericAppProps'
 
 const openAppsAtom = atom<string[]>([])
-const appConfigsAtom = atom<{ [key: string]: OsApplication }>({})
+export const appConfigsAtom = atom<{ [key: string]: OsApplication }>({})
 
 export const appsAtom = atom<OsApplication[]>([])
 
@@ -24,14 +24,18 @@ export const useApplicationManager = () => {
     dimensions,
   }: {
     name: string
-    dimensions: { x: number; y: number }
+    dimensions?: { x: number; y: number }
   }) => {
     setAppConfigs(
       _updateAppConfig({
         name,
         updateFields: {
-          left: dimensions.x,
-          top: dimensions.y,
+          // HACK: Need the window to report its dimensions on move or resize,
+          // not on minimize.
+          // This is in place to make minimizing/maximizing from the taskbar work
+          // for now.
+          left: dimensions?.x || 0,
+          top: dimensions?.y || 0,
           minimized: true,
         },
       }),

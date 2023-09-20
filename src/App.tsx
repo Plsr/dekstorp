@@ -1,11 +1,14 @@
 import styled from 'styled-components'
 import Desktop from './components/Desktop'
 import './index.css'
+import { ContextMenuProvider } from './hooks/useContextMenu'
 
 function App() {
   return (
     <Wrapper>
-      <Desktop />
+      <ContextMenuProvider>
+        <Desktop />
+      </ContextMenuProvider>
     </Wrapper>
   )
 }

@@ -3,9 +3,28 @@ import DateTimeWidget from './DateTimeWidget'
 import { OsApplication } from '../hooks/useApplicationManager'
 import { useApplicationManager } from '../hooks/useApplicationManager'
 import clsx from 'clsx'
+import { useContextMenu } from '../hooks/useContextMenu'
+import { useRegisterRightClick } from '../hooks/useRegisterRightClick'
+import { TaskBarContextMenu } from './TaskBarContextMenu'
 
 const TaskBar = () => {
   const { appConfigs, maximizeApp, openApps } = useApplicationManager()
+  const openContextMenu = useContextMenu()
+
+  const handleContextMenuEvent = (e: any) => {
+    e.preventDefault()
+    const appId = e.target.dataset.id
+
+    openContextMenu(
+      (close) => <TaskBarContextMenu appId={appId} close={close} />,
+      {
+        x: e.clientX,
+        y: e.clientY,
+      },
+    )
+  }
+
+  const rightClickTargetRef = useRegisterRightClick(handleContextMenuEvent)
 
   const handleAppClick = (candidateApp: OsApplication) => {
     maximizeApp(candidateApp.name)
@@ -16,9 +35,11 @@ const TaskBar = () => {
       <StartButton>
         <span>Start</span>
       </StartButton>
-      <div className="flex flex-1 bg-gray-200 gap-x-2 px-2 py-1">
+      <div className="flex flex-1 bg-gray-200 gap-x-2 px-2 py-1 relative">
         {Object.values(appConfigs).map((app) => (
           <div
+            ref={rightClickTargetRef}
+            data-id={app.name}
             className={clsx(
               ' flex basis-[150px] text-gray-800 items-center justify-start bg-gray-50 text-sm px-2 rounded-lg',
               openApps[0] === app.name && 'shadow-inner font-bold',

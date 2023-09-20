@@ -14,7 +14,6 @@ const DesktopApp: FC<DesktopAppProps> = ({
   const icon = images(`./${iconName}`)
 
   const handleClick = (event: any) => {
-    console.log('double click')
     onAppDoubleClick()
   }
 
