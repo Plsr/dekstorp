@@ -1,3 +1,8 @@
+import {
+  MinusSmallIcon,
+  SquaresPlusIcon,
+  XMarkIcon,
+} from '@heroicons/react/24/outline'
 import { useApplicationManager } from '../hooks/useApplicationManager'
 import { useApplicationState } from '../hooks/useApplicationState'
 
@@ -29,18 +34,21 @@ export const TaskBarContextMenu = ({
   const isMaximized = !isMinimized
 
   return (
-    <div className="bg-gray-300 rounded divide-y divide-gray-400 shadow">
+    <div className="bg-gray-300 rounded divide-y divide-gray-400 overflow-hidden shadow">
       {isMaximized && (
         <TaskBarContextMenuItem onClick={() => close(handleMinimizeClick)}>
+          <MinusSmallIcon className="w-4 h-4 mr-1" />
           Minimize
         </TaskBarContextMenuItem>
       )}
       {isMinimized && (
         <TaskBarContextMenuItem onClick={() => close(handleMaximizeClick)}>
+          <SquaresPlusIcon className="w-4 h-4 mr-1" />
           Maximize
         </TaskBarContextMenuItem>
       )}
       <TaskBarContextMenuItem onClick={() => close(handleCloseClick)}>
+        <XMarkIcon className="w-4 h-4 mr-1" />
         Close
       </TaskBarContextMenuItem>
     </div>
@@ -60,7 +68,9 @@ const TaskBarContextMenuItem = ({
     onClick()
   }
   return (
-    <div className="cursor-pointer text-sm p-2" onClick={handleItemClick}>
+    <div
+      className="cursor-pointer text-sm p-2 hover:bg-blue-300 flex items-center"
+      onClick={handleItemClick}>
       {children}
     </div>
   )
