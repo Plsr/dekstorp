@@ -13,16 +13,27 @@ export function useContextMenu() {
   const clickOutsideTargetRef = useClickOutside(handleClickOutside)
 
   const openContextMenu = useCallback(
-    (contextMenuFactory: JSX.Element, position: { x: number; y: number }) => {
-      const contextMenuWithClickOutside = (
-        <div ref={clickOutsideTargetRef}>
-          <PositionedMenu position={position}>
-            {contextMenuFactory}
-          </PositionedMenu>
-        </div>
-      )
+    function open(
+      contextMenuFactory: (close: (fn: () => void) => void) => React.ReactNode,
+      position: { x: number; y: number },
+    ) {
+      return new Promise<void>((resolve) => {
+        function close(callback: () => void) {
+          callback()
+          setContextMenuNode(null)
+          resolve()
+        }
 
-      setContextMenuNode(contextMenuWithClickOutside)
+        const contextMenuWithClickOutside = (close: any) => (
+          <div ref={clickOutsideTargetRef}>
+            <PositionedMenu position={position}>
+              {contextMenuFactory(close)}
+            </PositionedMenu>
+          </div>
+        )
+
+        setContextMenuNode(contextMenuWithClickOutside(close))
+      })
     },
     [setContextMenuNode, clickOutsideTargetRef],
   )

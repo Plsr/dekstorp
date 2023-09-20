@@ -10,7 +10,6 @@ import {
 } from '../hooks/useApplicationManager'
 
 const AppWindow = ({ app, className }: AppWindowProps) => {
-  console.log(app)
   const { left, top, name, dimensions, component } = app
   const { setAppActive, minimizeApp, closeApp, openApps } =
     useApplicationManager()

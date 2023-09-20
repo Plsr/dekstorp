@@ -5,6 +5,7 @@ import { useApplicationManager } from '../hooks/useApplicationManager'
 import clsx from 'clsx'
 import { useContextMenu } from '../hooks/useContextMenu'
 import { useRegisterRightClick } from '../hooks/useRegisterRightClick'
+import { TaskBarContextMenu } from './TaskBarContextMenu'
 
 const TaskBar = () => {
   const { appConfigs, maximizeApp, openApps } = useApplicationManager()
@@ -12,15 +13,15 @@ const TaskBar = () => {
 
   const handleContextMenuEvent = (e: any) => {
     e.preventDefault()
+    const appId = e.target.dataset.id
 
-    const menu = (
-      <div className=" bg-gray-600">
-        <div>item</div>
-        <div>another item that has a very long name</div>
-      </div>
+    openContextMenu(
+      (close) => <TaskBarContextMenu appId={appId} close={close} />,
+      {
+        x: e.clientX,
+        y: e.clientY,
+      },
     )
-
-    openContextMenu(menu, { x: e.clientX, y: e.clientY })
   }
 
   const rightClickTargetRef = useRegisterRightClick(handleContextMenuEvent)
@@ -34,11 +35,11 @@ const TaskBar = () => {
       <StartButton>
         <span>Start</span>
       </StartButton>
-      <div
-        className="flex flex-1 bg-gray-200 gap-x-2 px-2 py-1 relative"
-        ref={rightClickTargetRef}>
+      <div className="flex flex-1 bg-gray-200 gap-x-2 px-2 py-1 relative">
         {Object.values(appConfigs).map((app) => (
           <div
+            ref={rightClickTargetRef}
+            data-id={app.name}
             className={clsx(
               ' flex basis-[150px] text-gray-800 items-center justify-start bg-gray-50 text-sm px-2 rounded-lg',
               openApps[0] === app.name && 'shadow-inner font-bold',
