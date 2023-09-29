@@ -1,18 +1,33 @@
-import { FC, useContext } from 'react'
 import styled from 'styled-components'
-
-import { AppsContext, App } from '../context/AppsContext'
 import DateTimeWidget from './DateTimeWidget'
-import ActiveTaskBarApp from './ActiveTaskBarApp'
+import { OsApplication } from '../hooks/useApplicationManager'
+import { useApplicationManager } from '../hooks/useApplicationManager'
+import clsx from 'clsx'
+import { useContextMenu } from '../hooks/useContextMenu'
+import { useRegisterRightClick } from '../hooks/useRegisterRightClick'
+import { TaskBarContextMenu } from './TaskBarContextMenu'
 
-const TaskBar: FC<any> = () => {
-  const { apps, setApps } = useContext(AppsContext)
+const TaskBar = () => {
+  const { appConfigs, maximizeApp, openApps } = useApplicationManager()
+  const openContextMenu = useContextMenu()
 
-  const handleAppClick = (candidateApp: App) => {
-    const appIndex = apps.findIndex((app) => app.name === candidateApp.name)
-    const appsCopy = [...apps]
-    appsCopy[appIndex].minimized = false
-    setApps(appsCopy)
+  const handleContextMenuEvent = (e: any) => {
+    e.preventDefault()
+    const appId = e.target.dataset.id
+
+    openContextMenu(
+      (close) => <TaskBarContextMenu appId={appId} close={close} />,
+      {
+        x: e.clientX,
+        y: e.clientY,
+      },
+    )
+  }
+
+  const rightClickTargetRef = useRegisterRightClick(handleContextMenuEvent)
+
+  const handleAppClick = (candidateApp: OsApplication) => {
+    maximizeApp(candidateApp.name)
   }
 
   return (
@@ -20,23 +35,25 @@ const TaskBar: FC<any> = () => {
       <StartButton>
         <span>Start</span>
       </StartButton>
-      <ActiveAppsWrapper>
-        {apps?.map((app) => (
-          <StyledActiveTaksBarApp
-            key={app.id}
-            name={app.name}
-            onAppClick={() => handleAppClick(app)}
-          />
+      <div className="flex flex-1 bg-gray-200 gap-x-2 px-2 py-1 relative">
+        {Object.values(appConfigs).map((app) => (
+          <div
+            ref={rightClickTargetRef}
+            data-id={app.name}
+            className={clsx(
+              ' flex basis-[150px] text-gray-800 items-center justify-start bg-gray-50 text-sm px-2 rounded-lg',
+              openApps[0] === app.name && 'shadow-inner font-bold',
+              openApps[0] !== app.name && 'shadow',
+            )}
+            onClick={() => handleAppClick(app)}>
+            {app.name}
+          </div>
         ))}
-      </ActiveAppsWrapper>
+      </div>
       <StyledDateTimeWidget />
     </TaskBarWrapper>
   )
 }
-
-const StyledActiveTaksBarApp = styled(ActiveTaskBarApp)`
-  flex-basis: 150px;
-`
 
 const StartButton = styled.div`
   padding: 0rem 1rem;
@@ -44,14 +61,6 @@ const StartButton = styled.div`
   align-items: center;
   background-color: #616ae8;
   cursor: pointer;
-`
-
-const ActiveAppsWrapper = styled.div`
-  flex-grow: 1;
-  display: flex;
-  background-color: #edfbfc;
-  color: #333;
-  padding: 5px 10px;
 `
 
 const StyledDateTimeWidget = styled(DateTimeWidget)`

@@ -1,34 +1,43 @@
-import { FC, useContext, DragEvent, useRef, useState } from 'react'
+import { DragEvent, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { MdMinimize, MdClose } from 'react-icons/md'
 import Draggable from 'react-draggable'
 
-import { App, AppsContext } from '../context/AppsContext'
 import React from 'react'
+import {
+  OsApplication,
+  useApplicationManager,
+} from '../hooks/useApplicationManager'
 
-const AppWindow: FC<AppWindowProps> = ({ app, className }) => {
+const AppWindow = ({ app, className }: AppWindowProps) => {
   const { left, top, name, dimensions, component } = app
-  const { apps, setApps } = useContext(AppsContext)
+  const { setAppActive, minimizeApp, closeApp, openApps } =
+    useApplicationManager()
   const windowRef = useRef(null)
   const [shouldClose, setShouldClose] = useState(false)
 
-  const handleCloseClick = () => {
+  const isActive = openApps[0] === name
+
+  const handleTitleBarClick = () => {
+    if (isActive) {
+      return
+    }
+
+    setAppActive(name)
+  }
+
+  const handleCloseClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation()
     setShouldClose(true)
   }
 
-  const handleMimimizeClick = () => {
+  const handleMimimizeClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation()
     const dimensions = (
       windowRef.current! as HTMLElement
     ).getBoundingClientRect()
-    const appIndex = apps.findIndex((app) => app.name === name)
-    const appsCopy = [...apps]
-    appsCopy[appIndex] = {
-      ...appsCopy[appIndex],
-      minimized: true,
-      left: dimensions.x,
-      top: dimensions.y,
-    }
-    setApps(appsCopy)
+
+    minimizeApp({ name, dimensions })
   }
 
   const disableDrag = (event: DragEvent<HTMLDivElement>) => {
@@ -37,8 +46,15 @@ const AppWindow: FC<AppWindowProps> = ({ app, className }) => {
   }
 
   const handleCloseConfirm = () => {
-    const appsWithoutCurrent = apps.filter((app) => app.name !== name)
-    setApps(appsWithoutCurrent)
+    closeApp(name)
+  }
+
+  const handleAppWindowClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (isActive) {
+      return
+    }
+
+    setAppActive(name)
   }
 
   return (
@@ -46,11 +62,15 @@ const AppWindow: FC<AppWindowProps> = ({ app, className }) => {
       bounds="parent"
       defaultPosition={{ x: left, y: top }}
       handle=".handle">
-      <div
-        className="absolute flex flex-col bg-white rounded-lg pointer-events-auto overflow-hidden shadow-md"
-        style={{ width: dimensions.width, height: dimensions.height }}
+      <Window
+        width={dimensions.width}
+        height={dimensions.height}
+        index={
+          openApps.length - openApps.findIndex((appName) => appName === name)
+        }
+        className={className}
         ref={windowRef}>
-        <TitleBar className="handle">
+        <TitleBar className="handle" onMouseDown={handleTitleBarClick}>
           <TitleBarTitle>{name}</TitleBarTitle>
           <TitleBarControls>
             <TitleBarButton onClick={handleMimimizeClick}>
@@ -61,16 +81,30 @@ const AppWindow: FC<AppWindowProps> = ({ app, className }) => {
             </TitleBarButton>
           </TitleBarControls>
         </TitleBar>
-        <div className="flex-grow" draggable onDragStart={disableDrag}>
+        <Content
+          draggable
+          onDragStart={disableDrag}
+          onClick={handleAppWindowClick}>
+          {!isActive && (
+            <div
+              className="absolute"
+              style={{
+                width: `${dimensions.width}px`,
+                height: `${dimensions.height}px`,
+              }}
+            />
+          )}
           {React.createElement(component, {
             shouldClose: shouldClose,
             onCloseConfirm: handleCloseConfirm,
           })}
-        </div>
-      </div>
+        </Content>
+      </Window>
     </Draggable>
   )
 }
+
+// TODO: Convert to tailwind
 const TitleBar = styled.div`
   height: 40px;
   width: 100%;
@@ -91,6 +125,11 @@ const TitleBarControls = styled.div`
   justify-content: space-between;
 `
 
+const Content = styled.div`
+  width: 100%;
+  height: 100%;
+`
+
 const TitleBarTitle = styled.p`
   flex-grow: 1;
   text-align: center;
@@ -104,8 +143,24 @@ const TitleBarButton = styled.div`
   cursor: pointer;
 `
 
-interface AppWindowProps {
-  app: App
+const Window = styled.div<{ width: number; height: number; index: number }>`
+  width: ${(props) => props.width + 'px'};
+  height: ${(props) => props.height + 'px'};
+  z-index: ${(props) => props.index};
+  background-color: white;
+  border-radius: 8px;
+  position: absolute;
+  pointer-events: auto;
+  box-shadow: 0.9px 1px 5.4px rgba(0, 0, 0, 0.02),
+    2.1px 2.3px 12.9px rgba(0, 0, 0, 0.028),
+    3.9px 4.4px 24.3px rgba(0, 0, 0, 0.035),
+    6.9px 7.8px 43.3px rgba(0, 0, 0, 0.042),
+    13px 14.6px 81px rgba(0, 0, 0, 0.05), 31px 35px 194px rgba(0, 0, 0, 0.07);
+  overflow: hidden;
+`
+
+type AppWindowProps = {
+  app: OsApplication
   className?: string
 }
 

@@ -1,10 +1,9 @@
-import { App } from '../context/AppsContext'
-
+import { OsApplication } from '../hooks/useApplicationManager'
 import { CalculatorApp } from '../app-components/CalculatorApp'
 import { NotesApp } from '../app-components/NotesApp'
 import { BrowserApp } from '../app-components/BrowserApp'
 
-export const availableApps: App[] = [
+export const availableApps: OsApplication[] = [
   {
     name: 'Calculator',
     dimensions: { width: 300, height: 500 },

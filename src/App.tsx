@@ -1,15 +1,15 @@
 import styled from 'styled-components'
 import Desktop from './components/Desktop'
-import { AppsProvider } from './context/AppsContext'
 import './index.css'
+import { ContextMenuProvider } from './hooks/useContextMenu'
 
 function App() {
   return (
-    <AppsProvider>
-      <Wrapper>
+    <Wrapper>
+      <ContextMenuProvider>
         <Desktop />
-      </Wrapper>
-    </AppsProvider>
+      </ContextMenuProvider>
+    </Wrapper>
   )
 }
 
