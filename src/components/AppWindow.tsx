@@ -127,7 +127,7 @@ const TitleBarControls = styled.div`
 
 const Content = styled.div`
   width: 100%;
-  height: 100%;
+  flex: 1;
 `
 
 const TitleBarTitle = styled.p`
@@ -148,6 +148,8 @@ const Window = styled.div<{ width: number; height: number; index: number }>`
   height: ${(props) => props.height + 'px'};
   z-index: ${(props) => props.index};
   background-color: white;
+  display: flex;
+  flex-direction: column;
   border-radius: 8px;
   position: absolute;
   pointer-events: auto;

@@ -1,17 +1,29 @@
 import { useState } from 'react'
+import { GenericAppProps } from '../types/genericAppProps'
+import { useHandleClose } from '../hooks/useHandleClose'
 
-export const BrowserApp = () => {
+export const BrowserApp = ({
+  shouldClose,
+  onCloseConfirm,
+}: GenericAppProps) => {
   const [address, setAddress] = useState('https://www.google.com/search?igu=1')
   const [addressInputVal, setAddressInputVal] = useState(
     'https://www.google.com/search?igu=1',
   )
 
-  const handleClick = () => {
+  useHandleClose(shouldClose, () => {}, onCloseConfirm)
+
+  const handleClick = async () => {
     if (!addressInputVal) {
       return
     }
 
-    setAddress(addressInputVal)
+    let sanitizedAddress = addressInputVal
+    if (addressInputVal.slice(0, 5) !== 'https') {
+      sanitizedAddress = 'https://' + addressInputVal
+    }
+
+    setAddress(sanitizedAddress)
   }
 
   return (
@@ -24,7 +36,7 @@ export const BrowserApp = () => {
         />
         <button onClick={handleClick}>Go</button>
       </div>
-      <iframe title="google" src={address} className="flex-grow" />
+      <iframe title="google" src={address} className="h-full" />
     </div>
   )
 }
