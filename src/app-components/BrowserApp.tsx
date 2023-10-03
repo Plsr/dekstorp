@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { FormEvent, useRef, useState } from 'react'
 import { GenericAppProps } from '../types/genericAppProps'
 import { useHandleClose } from '../hooks/useHandleClose'
 
@@ -10,10 +10,15 @@ export const BrowserApp = ({
   const [addressInputVal, setAddressInputVal] = useState(
     'https://www.google.com/search?igu=1',
   )
+  const iframeRef = useRef<HTMLIFrameElement | null>(null)
 
   useHandleClose(shouldClose, () => {}, onCloseConfirm)
 
   const handleClick = async () => {
+    updateAddress()
+  }
+
+  const updateAddress = () => {
     if (!addressInputVal) {
       return
     }
@@ -26,17 +31,26 @@ export const BrowserApp = ({
     setAddress(sanitizedAddress)
   }
 
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault() // Prevent page reload
+
+    updateAddress()
+    iframeRef.current?.contentWindow?.focus()
+  }
+
   return (
     <div className="h-full flex flex-col">
       <div className="flex justify-around bg-slate-400 py-2">
-        <input
-          value={addressInputVal}
-          onChange={(event) => setAddressInputVal(event.target.value)}
-          className="w-3/4"
-        />
+        <form onSubmit={(e) => handleSubmit(e)} className="w-3/4">
+          <input
+            value={addressInputVal}
+            onChange={(event) => setAddressInputVal(event.target.value)}
+            className="w-full"
+          />
+        </form>
         <button onClick={handleClick}>Go</button>
       </div>
-      <iframe title="google" src={address} className="h-full" />
+      <iframe ref={iframeRef} title="google" src={address} className="h-full" />
     </div>
   )
 }
