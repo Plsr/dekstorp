@@ -1,4 +1,4 @@
-type BrowserHistoryEntry = {
+export type BrowserHistoryEntry = {
   url: string
   dateAdded: string
 }
@@ -12,7 +12,11 @@ export const useBrowserHistory = () => {
     addLocalStorageEntry<BrowserHistoryEntry>(STORAGE_KEY, historyEntry)
   }
 
-  return { addEntry }
+  const getHistory = () => {
+    return getLocalStorageEntry<BrowserHistoryEntry>(STORAGE_KEY)
+  }
+
+  return { addEntry, getHistory }
 }
 
 // TODO: Move to shared util
@@ -28,4 +32,14 @@ function addLocalStorageEntry<T>(key: string, data: T) {
   }
 
   localStorage.setItem(key, JSON.stringify(newDataSet))
+}
+
+function getLocalStorageEntry<T>(key: string): T[] {
+  const data = window.localStorage.getItem(key)
+
+  if (data) {
+    return JSON.parse(data)
+  }
+
+  return []
 }

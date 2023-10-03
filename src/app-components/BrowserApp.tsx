@@ -1,7 +1,10 @@
 import { FormEvent, useRef, useState } from 'react'
 import { GenericAppProps } from '../types/genericAppProps'
 import { useHandleClose } from '../hooks/useHandleClose'
-import { useBrowserHistory } from '../hooks/useBrowserHistory'
+import {
+  BrowserHistoryEntry,
+  useBrowserHistory,
+} from '../hooks/useBrowserHistory'
 import { QueueListIcon } from '@heroicons/react/24/outline'
 
 type ViewState = 'browser' | 'history'
@@ -36,8 +39,13 @@ export const BrowserApp = ({
       sanitizedAddress = 'https://' + addressInputVal
     }
 
+    // Only add new entry if address changed
+    if (sanitizedAddress !== address) {
+      history.addEntry(sanitizedAddress)
+    }
+
     setAddress(sanitizedAddress)
-    history.addEntry(sanitizedAddress)
+    setViewState('browser')
   }
 
   const handleHistoryButtonClick = () => {
@@ -51,6 +59,11 @@ export const BrowserApp = ({
 
     updateAddress()
     iframeRef.current?.contentWindow?.focus()
+  }
+
+  const handleHistoryEntryClick = (url: string) => {
+    setAddress(url)
+    setViewState('browser')
   }
 
   return (
@@ -68,7 +81,12 @@ export const BrowserApp = ({
           <QueueListIcon className="w-6 h-6" />
         </button>
       </div>
-      {viewState === 'history' && <div>Here be history</div>}
+      {viewState === 'history' && (
+        <HistoryView
+          historyEntries={history.getHistory()}
+          onEntryClick={handleHistoryEntryClick}
+        />
+      )}
       {viewState === 'browser' && (
         <iframe
           ref={iframeRef}
@@ -77,6 +95,28 @@ export const BrowserApp = ({
           className="h-full"
         />
       )}
+    </div>
+  )
+}
+
+type HistoryViewProps = {
+  historyEntries: BrowserHistoryEntry[]
+  onEntryClick: (url: string) => void
+}
+
+const HistoryView = ({ historyEntries, onEntryClick }: HistoryViewProps) => {
+  return (
+    <div className="p-4">
+      <h2 className="text-lg mb-2">History</h2>
+      <ul>
+        {historyEntries.map((historyEntry) => (
+          <li
+            onClick={() => onEntryClick(historyEntry.url)}
+            className="mb-1 cursor-pointer">
+            {historyEntry.url}
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
