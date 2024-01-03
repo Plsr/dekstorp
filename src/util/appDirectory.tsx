@@ -1,6 +1,7 @@
 import { OsApplication } from '../hooks/useApplicationManager'
 import { CalculatorApp } from '../app-components/CalculatorApp'
 import { NotesApp } from '../app-components/NotesApp'
+import { BrowserApp } from '../app-components/BrowserApp'
 
 export const availableApps: OsApplication[] = [
   {
@@ -21,6 +22,16 @@ export const availableApps: OsApplication[] = [
     left: 0,
     id: 'notes',
     component: NotesApp,
+    icon: 'notes-icon.svg',
+  },
+  {
+    name: 'Browser',
+    dimensions: { width: 800, height: 500 },
+    minimized: false,
+    top: 0,
+    left: 0,
+    id: 'browser',
+    component: BrowserApp,
     icon: 'notes-icon.svg',
   },
 ]

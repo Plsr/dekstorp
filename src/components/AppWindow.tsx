@@ -125,6 +125,11 @@ const TitleBarControls = styled.div`
   justify-content: space-between;
 `
 
+const Content = styled.div`
+  width: 100%;
+  flex: 1;
+`
+
 const TitleBarTitle = styled.p`
   flex-grow: 1;
   text-align: center;
@@ -132,11 +137,6 @@ const TitleBarTitle = styled.p`
   color: #e6f0f5;
   font-size: 0.875rem;
   cursor: default;
-`
-
-const Content = styled.div`
-  width: 100%;
-  height: 100%;
 `
 
 const TitleBarButton = styled.div`
@@ -148,6 +148,8 @@ const Window = styled.div<{ width: number; height: number; index: number }>`
   height: ${(props) => props.height + 'px'};
   z-index: ${(props) => props.index};
   background-color: white;
+  display: flex;
+  flex-direction: column;
   border-radius: 8px;
   position: absolute;
   pointer-events: auto;
